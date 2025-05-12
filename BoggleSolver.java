@@ -10,7 +10,6 @@ import edu.princeton.cs.algs4.TrieSET;
 public class BoggleSolver
 {
     private ExposedTrieSET trie = new ExposedTrieSET();
-    private TrieSET allWords = new TrieSET();
     // Initializes the data structure using the given array of strings as the dictionary.
     // (You can assume each word in the dictionary contains only the uppercase letters A through Z.)
     public BoggleSolver(String[] dictionary) {
@@ -68,9 +67,9 @@ public class BoggleSolver
             this.usedCoords.add(query.currentCoords);
             this.length = query.length++;
 
-            if (this.isWord) {
-                System.out.println("\n!" + this.queryWord + "!\n");
-            }
+            // if (this.isWord) {
+            //     System.out.println("\n!" + this.queryWord + "!\n");
+            // }
         }
 
         /**
@@ -90,6 +89,7 @@ public class BoggleSolver
     // Returns the set of all valid words in the given Boggle board, as an Iterable.
     public Iterable<String> getAllValidWords(BoggleBoard board) {
         Queue<Query> allQueries = new Queue<>();
+        TrieSET allWords = new TrieSET();
         
         for (int i = 0; i < board.rows(); i++) {
             for (int j = 0; j < board.cols(); j++) {
@@ -102,7 +102,20 @@ public class BoggleSolver
         }
 
         // collect all words recursively
-        return null;
+        for (Query q : allQueries) {
+            collect(q, allWords);
+        }
+        return allWords;
+    }
+
+    private void collect(Query query, TrieSET wordList) {
+        if (query.isWord) {
+            wordList.add(query.queryWord);
+        }
+
+        for (Query q : query.nextQueries) {
+            collect(q, wordList);
+        }
     }
 
     // Returns the score of the given word if it is in the dictionary, zero otherwise.
@@ -174,10 +187,10 @@ public class BoggleSolver
     BoggleBoard board = new BoggleBoard("boggle\\board4x4.txt");
     solver.getAllValidWords(board);
     int score = 0;
-    // for (String word : solver.getAllValidWords(board)) {
-    //     StdOut.println(word);
-    //     score += solver.scoreOf(word);
-    // }
+    for (String word : solver.getAllValidWords(board)) {
+        StdOut.println(word);
+        // score += solver.scoreOf(word);
+    }
     StdOut.println("Score = " + score);
 }
 
