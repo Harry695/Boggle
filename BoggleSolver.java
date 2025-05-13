@@ -127,7 +127,21 @@ public class BoggleSolver
 
     // Returns the score of the given word if it is in the dictionary, zero otherwise.
     // (You can assume the word contains only the uppercase letters A through Z.)
-    // public int scoreOf(String word)
+    public int scoreOf(String word) {
+        if (!trie.contains(word)) {
+            return 0;
+        } else if (word.length() <= 4) {
+            return 1;
+        } else if (word.length() <= 5) {
+            return 2;
+        } else if (word.length() <= 6) {
+            return 3;
+        } else if (word.length() <= 7) {
+            return 5;
+        } else {
+            return 11;
+        }
+    }
 
     /* private Query addChar(String cur, int i, int j) 
         if no unused letter added to cur can give a valid word, return unsuccessful query
@@ -189,11 +203,11 @@ public class BoggleSolver
     In in = new In("boggle\\dictionary-algs4.txt");
     String[] dictionary = in.readAllStrings();
     BoggleSolver solver = new BoggleSolver(dictionary);
-    BoggleBoard board = new BoggleBoard("boggle\\board-q.txt");
+    BoggleBoard board = new BoggleBoard("boggle\\board4x4.txt");
     int score = 0;
     for (String word : solver.getAllValidWords(board)) {
         StdOut.println(word);
-        // score += solver.scoreOf(word);
+        score += solver.scoreOf(word);
     }
     StdOut.println("Score = " + score);
 }
