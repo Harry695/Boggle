@@ -60,7 +60,7 @@ public class BoggleSolver
          * @param coord coord of the new char
          */
         public Query(Query query, char c, Index2D coord) {
-            this.queryWord = query.queryWord + c;
+            this.queryWord = query.queryWord + addChar(c);
             this.isWord = trie.contains(queryWord.toString());
             this.currentCoords = coord;
             this.usedCoords = new HashSet<>(query.usedCoords); // don't need to copy?
@@ -77,12 +77,19 @@ public class BoggleSolver
          * @param currentString string containing the starting char
          * @param currentCoords coords of starting char
          */
-        public Query(String currentString, Index2D currentCoords) {
+        public Query(char startingChar, Index2D currentCoords) {
             this.isWord = false;
-            this.queryWord = currentString;
+            this.queryWord = addChar(startingChar);
             this.currentCoords = currentCoords;
             this.usedCoords = new HashSet<>();
-            this.length = currentString.length();
+            this.length = this.queryWord.length();
+        }
+
+        private String addChar(char c) {
+            if (c == 'Q') {
+                return "QU";
+            }
+            return c + "";
         }
     }
 
@@ -96,7 +103,7 @@ public class BoggleSolver
                 allQueries.enqueue(addChar(
                         board, 
                         new Query(
-                            board.getLetter(i, j) + "", 
+                            board.getLetter(i, j), 
                             new Index2D(i, j))));
             }
         }
@@ -178,14 +185,11 @@ public class BoggleSolver
         return neighbors;
     }
 
-    /* check Q: at the end of building a string and about to be added to listOfWords, check indexOf(Q) & insert U */
-
     public static void main(String[] args) {
     In in = new In("boggle\\dictionary-algs4.txt");
     String[] dictionary = in.readAllStrings();
     BoggleSolver solver = new BoggleSolver(dictionary);
-    BoggleBoard board = new BoggleBoard("boggle\\board4x4.txt");
-    solver.getAllValidWords(board);
+    BoggleBoard board = new BoggleBoard("boggle\\board-q.txt");
     int score = 0;
     for (String word : solver.getAllValidWords(board)) {
         StdOut.println(word);
