@@ -64,7 +64,7 @@ public class BoggleSolver
             this.isWord = trie.contains(queryWord.toString());
             this.currentCoords = coord;
             this.usedCoords = new HashSet<>(query.usedCoords); // don't need to copy?
-            this.usedCoords.add(query.currentCoords);
+            this.usedCoords.add(this.currentCoords);
             this.length = query.length++;
 
             // if (this.isWord) {
@@ -82,6 +82,7 @@ public class BoggleSolver
             this.queryWord = addChar(startingChar);
             this.currentCoords = currentCoords;
             this.usedCoords = new HashSet<>();
+            this.usedCoords.add(this.currentCoords);
             this.length = this.queryWord.length();
         }
 
@@ -203,7 +204,7 @@ public class BoggleSolver
     In in = new In("boggle\\dictionary-algs4.txt");
     String[] dictionary = in.readAllStrings();
     BoggleSolver solver = new BoggleSolver(dictionary);
-    BoggleBoard board = new BoggleBoard("boggle\\board4x4.txt");
+    BoggleBoard board = new BoggleBoard("boggle\\board-q.txt");
     int score = 0;
     for (String word : solver.getAllValidWords(board)) {
         StdOut.println(word);
