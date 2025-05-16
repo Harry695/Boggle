@@ -166,7 +166,7 @@ public class BoggleSolver
         for (Index2D coord : getAllValidNeighbors(board, query)) {
             char c = board.getLetter(coord.i, coord.j);
 
-            if (nextChars[c] == null) {
+            if (nextChars == null || nextChars[c] == null) {
                 // System.out.println("no valid char found");
                 continue;
             }
