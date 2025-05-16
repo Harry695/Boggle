@@ -160,13 +160,13 @@ public class BoggleSolver
     */
     private Query addChar(BoggleBoard board, Query query) {
         // System.out.println("start addChar");
-        Set<Character> validChars = trie.nextCharacters(query.queryWord.toString());
+        ExposedTrieSET.Node[] nextChars = trie.nextCharacters(query.queryWord.toString());
         // System.out.println("found next chars of length " + validChars.size());
 
         for (Index2D coord : getAllValidNeighbors(board, query)) {
             char c = board.getLetter(coord.i, coord.j);
 
-            if (!validChars.contains(c)) {
+            if (nextChars[c] == null) {
                 // System.out.println("no valid char found");
                 continue;
             }

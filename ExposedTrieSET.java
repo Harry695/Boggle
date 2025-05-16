@@ -14,7 +14,7 @@ public class ExposedTrieSET {
     private int n;          // number of keys in trie
 
     // R-way trie node
-    private static class Node {
+    public static class Node {
         private Node[] next = new Node[R];
         private boolean isString;
     }
@@ -112,18 +112,11 @@ public class ExposedTrieSET {
      * @param prefix the prefix.
      * @return a Queue of all the characters that can follow a given prefix.
      */
-    public Set<Character> nextCharacters(String prefix) {
-        Set<Character> results = new HashSet<>();
+    public Node[] nextCharacters(String prefix) {
         Node x = get(root, prefix, 0);
 
-        if (x == null) return results;
-
-        for (int c = 0; c < R; c++) {
-            if (x.next[c] != null) {
-                results.add((char) c);
-            }
-        }
-        return results;
+        if (x != null) return x.next;
+        return null;
     }
 
     private void collect(Node x, StringBuilder prefix, Queue<String> results) {
