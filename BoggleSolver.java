@@ -158,30 +158,8 @@ public class BoggleSolver
         if failed query, add word to list
 
     */
-    private Query addChar(BoggleBoard board, Query query) {
-        // System.out.println("start addChar");
+    private Query addChar(BoggleBoard board, Query query) { // check used letters
         ExposedTrieSET.Node[] nextChars = trie.nextCharacters(query.queryWord.toString());
-        // System.out.println("found next chars of length " + validChars.size());
-
-        for (Index2D coord : getAllValidNeighbors(board, query)) {
-            char c = board.getLetter(coord.i, coord.j);
-
-            if (nextChars == null || nextChars[c] == null) {
-                // System.out.println("no valid char found");
-                continue;
-            }
-
-            // System.out.println("valid path through " + query.queryWord + c);
-            Query newQuery = new Query(query, c, coord);
-            query.nextQueries.add(addChar(board, newQuery)); 
-        }
-
-        // System.out.println("Query for " + query.queryWord + " complete with " + query.nextQueries.size() + " found");
-        return query;
-    }
-
-    private Queue<Index2D> getAllValidNeighbors(BoggleBoard board, Query query) { // check used letters
-        Queue<Index2D> neighbors = new Queue<>();
 
         int i = query.currentCoords.i;
         int j = query.currentCoords.j;
@@ -192,19 +170,27 @@ public class BoggleSolver
                 Index2D newIndex = new Index2D(newI, newJ);
 
                 if (newI >= 0 && newI < board.rows() && newJ >= 0 && newJ < board.cols() && !query.usedCoords.contains(newIndex)) {
-                    neighbors.enqueue(newIndex);
+                    char c = board.getLetter(newI, newJ);
+
+                    if (nextChars == null || nextChars[c] == null) {
+                        // System.out.println("no valid char found");
+                        continue;
+                    }
+
+                    // System.out.println("valid path through " + query.queryWord + c);
+                    Query newQuery = new Query(query, c, newIndex);
+                    query.nextQueries.add(addChar(board, newQuery));
                 }
             }
         }
-
-        return neighbors;
+        return query;
     }
 
     public static void main(String[] args) {
     In in = new In("boggle\\dictionary-algs4.txt");
     String[] dictionary = in.readAllStrings();
     BoggleSolver solver = new BoggleSolver(dictionary);
-    BoggleBoard board = new BoggleBoard("boggle\\board-q.txt");
+    BoggleBoard board = new BoggleBoard("boggle\\board4x4.txt");
     int score = 0;
     for (String word : solver.getAllValidWords(board)) {
         StdOut.println(word);

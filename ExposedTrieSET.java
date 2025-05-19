@@ -1,6 +1,4 @@
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 
 import edu.princeton.cs.algs4.Queue;
 import edu.princeton.cs.algs4.StdIn;
