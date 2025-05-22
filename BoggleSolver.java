@@ -153,17 +153,17 @@ public class BoggleSolver
                         continue;
                     }
 
-                    System.out.println("valid path through " + query.queryWord + c);
+                    // System.out.println("valid path through " + query.queryWord + c);
                     Query newQuery = new Query(query, c, newIndex);
                     if (trie.contains(newQuery.queryWord.toString())) {
                         wordList.add(newQuery.queryWord.toString());
-                        System.out.println("!word found! " + newQuery.queryWord);
+                        // System.out.println("!word found! " + newQuery.queryWord);
                     }
                     addChar(board, newQuery, wordList);
                 }
             }
         }
-        System.out.println(Runtime.getRuntime().totalMemory());
+        // System.out.println(Runtime.getRuntime().totalMemory());
         return query;
     }
 
@@ -178,7 +178,7 @@ public class BoggleSolver
         score += solver.scoreOf(word);
     }
     StdOut.println("Score = " + score);
-    System.out.println(Runtime.getRuntime().totalMemory());
+    // System.out.println(Runtime.getRuntime().totalMemory());
 }
 
 }
