@@ -6,7 +6,7 @@ import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.TrieSET;
 
 public class ExposedTrieSET {
-    private static final int R = 256;        // extended ASCII
+    private static final int R = 26;        // letters only
 
     private Node root;      // root of trie
     private int n;          // number of keys in trie
@@ -39,7 +39,7 @@ public class ExposedTrieSET {
     private Node get(Node x, String key, int d) {
         if (x == null) return null;
         if (d == key.length()) return x;
-        char c = key.charAt(d);
+        int c = key.charAt(d) - 'A';
         return get(x.next[c], key, d+1);
     }
 
@@ -60,7 +60,7 @@ public class ExposedTrieSET {
             x.isString = true;
         }
         else {
-            char c = key.charAt(d);
+            int c = key.charAt(d) - 'A';
             x.next[c] = add(x.next[c], key, d+1);
         }
         return x;

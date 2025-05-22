@@ -78,7 +78,7 @@ public class BoggleSolver
         private void addChar(StringBuilder sb, char c) {
             sb.append(c);
             if (c == 'Q') {
-                sb.append("U");
+                sb.append('U');
             }
         }
     }
@@ -148,20 +148,22 @@ public class BoggleSolver
                 if (newI >= 0 && newI < board.rows() && newJ >= 0 && newJ < board.cols() && !query.usedCoords.contains(newIndex)) {
                     char c = board.getLetter(newI, newJ);
 
-                    if (nextChars == null || nextChars[c] == null) {
+                    if (nextChars == null || nextChars[c - 'A'] == null) {
                         // System.out.println("no valid char found");
                         continue;
                     }
 
-                    // System.out.println("valid path through " + query.queryWord + c);
+                    System.out.println("valid path through " + query.queryWord + c);
                     Query newQuery = new Query(query, c, newIndex);
                     if (trie.contains(newQuery.queryWord.toString())) {
                         wordList.add(newQuery.queryWord.toString());
+                        System.out.println("!word found! " + newQuery.queryWord);
                     }
                     addChar(board, newQuery, wordList);
                 }
             }
         }
+        System.out.println(Runtime.getRuntime().totalMemory());
         return query;
     }
 
@@ -176,6 +178,7 @@ public class BoggleSolver
         score += solver.scoreOf(word);
     }
     StdOut.println("Score = " + score);
+    System.out.println(Runtime.getRuntime().totalMemory());
 }
 
 }
