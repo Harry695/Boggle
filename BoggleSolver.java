@@ -2,7 +2,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import edu.princeton.cs.algs4.In;
-import edu.princeton.cs.algs4.Queue;
 import edu.princeton.cs.algs4.StdOut;
 
 public class BoggleSolver
@@ -85,17 +84,15 @@ public class BoggleSolver
 
     // Returns the set of all valid words in the given Boggle board, as an Iterable.
     public Iterable<String> getAllValidWords(BoggleBoard board) {
-        Queue<Query> allQueries = new Queue<>();
         HashSet<String> allWords = new HashSet<>();
         
         for (int i = 0; i < board.rows(); i++) {
             for (int j = 0; j < board.cols(); j++) {
-                allQueries.enqueue(addChar(
-                        board, 
+                addChar(board, 
                         new Query(
                             board.getLetter(i, j), 
                             new Index2D(i, j)),
-                        allWords));
+                        allWords);
             }
         }
 
