@@ -5,7 +5,6 @@ import java.util.Set;
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.Queue;
 import edu.princeton.cs.algs4.StdOut;
-import edu.princeton.cs.algs4.TrieSET;
 
 public class BoggleSolver
 {
@@ -97,7 +96,7 @@ public class BoggleSolver
     // Returns the set of all valid words in the given Boggle board, as an Iterable.
     public Iterable<String> getAllValidWords(BoggleBoard board) {
         Queue<Query> allQueries = new Queue<>();
-        TrieSET allWords = new TrieSET();
+        HashSet<String> allWords = new HashSet<>();
         
         for (int i = 0; i < board.rows(); i++) {
             for (int j = 0; j < board.cols(); j++) {
@@ -116,7 +115,7 @@ public class BoggleSolver
         return allWords;
     }
 
-    private void collect(Query query, TrieSET wordList) {
+    private void collect(Query query, HashSet<String> wordList) {
         if (query.isWord) {
             wordList.add(query.queryWord);
         }
