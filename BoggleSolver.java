@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -45,12 +44,9 @@ public class BoggleSolver
     }
 
     private class Query {
-        public boolean isWord;
-        public String queryWord;
+        public StringBuilder queryWord;
         public Index2D currentCoords;
         public Set<Index2D> usedCoords;
-        public ArrayList<Query> nextQueries = new ArrayList<>();
-        public int length;
 
         /**
          * The success constructor, used when adding a char.
@@ -59,16 +55,11 @@ public class BoggleSolver
          * @param coord coord of the new char
          */
         public Query(Query query, char c, Index2D coord) {
-            this.queryWord = query.queryWord + addChar(c);
-            this.isWord = trie.contains(queryWord.toString());
+            this.queryWord = new StringBuilder(query.queryWord);
+            addChar(this.queryWord, c);
             this.currentCoords = coord;
             this.usedCoords = new HashSet<>(query.usedCoords); // don't need to copy?
             this.usedCoords.add(this.currentCoords);
-            this.length = query.length++;
-
-            // if (this.isWord) {
-            //     System.out.println("\n!" + this.queryWord + "!\n");
-            // }
         }
 
         /**
@@ -77,19 +68,18 @@ public class BoggleSolver
          * @param currentCoords coords of starting char
          */
         public Query(char startingChar, Index2D currentCoords) {
-            this.isWord = false;
-            this.queryWord = addChar(startingChar);
+            this.queryWord = new StringBuilder();
+            addChar(this.queryWord, startingChar);
             this.currentCoords = currentCoords;
             this.usedCoords = new HashSet<>();
             this.usedCoords.add(this.currentCoords);
-            this.length = this.queryWord.length();
         }
 
-        private String addChar(char c) {
+        private void addChar(StringBuilder sb, char c) {
+            sb.append(c);
             if (c == 'Q') {
-                return "QU";
+                sb.append("U");
             }
-            return c + "";
         }
     }
 
@@ -104,25 +94,12 @@ public class BoggleSolver
                         board, 
                         new Query(
                             board.getLetter(i, j), 
-                            new Index2D(i, j))));
+                            new Index2D(i, j)),
+                        allWords));
             }
         }
 
-        // collect all words recursively
-        for (Query q : allQueries) {
-            collect(q, allWords);
-        }
         return allWords;
-    }
-
-    private void collect(Query query, HashSet<String> wordList) {
-        if (query.isWord) {
-            wordList.add(query.queryWord);
-        }
-
-        for (Query q : query.nextQueries) {
-            collect(q, wordList);
-        }
     }
 
     // Returns the score of the given word if it is in the dictionary, zero otherwise.
@@ -157,7 +134,7 @@ public class BoggleSolver
         if failed query, add word to list
 
     */
-    private Query addChar(BoggleBoard board, Query query) { // check used letters
+    private Query addChar(BoggleBoard board, Query query, HashSet<String> wordList) { // check used letters
         ExposedTrieSET.Node[] nextChars = trie.nextCharacters(query.queryWord.toString());
 
         int i = query.currentCoords.i;
@@ -178,7 +155,10 @@ public class BoggleSolver
 
                     // System.out.println("valid path through " + query.queryWord + c);
                     Query newQuery = new Query(query, c, newIndex);
-                    query.nextQueries.add(addChar(board, newQuery));
+                    if (trie.contains(newQuery.queryWord.toString())) {
+                        wordList.add(newQuery.queryWord.toString());
+                    }
+                    addChar(board, newQuery, wordList);
                 }
             }
         }
